@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Bunkr Gallery Auto Downloader",
+  "version": "1.0.0",
+  "description": "Pick videos from a Bunkr gallery, open their file pages, auto-click Download, and save hands-free.",
+  "permissions": ["downloads", "tabs", "scripting", "storage", "activeTab"],
+  "host_permissions": [
+    "*://bunkr.ph/*",
+    "*://*.bunkr.ph/*",
+    "*://bunkr.cr/*",
+    "*://*.bunkr.cr/*",
+    "*://bunkr.ru/*",
+    "*://*.bunkr.ru/*",
+    "*://bunkrr.su/*",
+    "*://*.bunkrr.su/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Bunkr Gallery Auto Downloader"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://bunkr.ph/*",
+        "*://*.bunkr.ph/*",
+        "*://bunkr.cr/*",
+        "*://*.bunkr.cr/*",
+        "*://bunkr.ru/*",
+        "*://*.bunkr.ru/*",
+        "*://bunkrr.su/*",
+        "*://*.bunkrr.su/*"
+      ],
+      "js": ["content_file.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+  },
+  "options_page": "options.html"
+}

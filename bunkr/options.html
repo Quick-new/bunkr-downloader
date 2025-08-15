@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>Bunkr Downloader – Options</title></head>
+  <body style="font-family: system-ui; padding:16px;">
+    <h2>Options</h2>
+    <div>
+      <label>Subfolder (under Downloads): <input id="subfolder" placeholder="Bunkr"></label>
+    </div>
+    <div style="margin-top:8px;">
+      <label><input type="checkbox" id="preferOgName" checked> Prefer page’s <code>ogname</code> when naming</label>
+    </div>
+    <div style="margin-top:8px;">
+      <label>Auto-close file tabs after (seconds, 0 = never): <input id="autoCloseSecs" type="number" min="0" step="1" value="5"></label>
+    </div>
+    <div style="margin-top:8px;">
+      <label>Delay between opening file tabs (ms): <input id="openTabsPacingMs" type="number" min="0" step="50" value="800"></label>
+    </div>
+    <div style="margin-top:12px;">
+      <button id="save">Save</button>
+    </div>
+    <script>
+      (async function () {
+        const els = {
+          subfolder: document.getElementById('subfolder'),
+          preferOgName: document.getElementById('preferOgName'),
+          autoCloseSecs: document.getElementById('autoCloseSecs'),
+          openTabsPacingMs: document.getElementById('openTabsPacingMs')
+        };
+        const saved = await chrome.storage.sync.get(Object.keys(els));
+        if (saved.subfolder) els.subfolder.value = saved.subfolder;
+        if (typeof saved.preferOgName === 'boolean') els.preferOgName.checked = saved.preferOgName;
+        if (saved.autoCloseSecs != null) els.autoCloseSecs.value = saved.autoCloseSecs;
+        if (saved.openTabsPacingMs != null) els.openTabsPacingMs.value = saved.openTabsPacingMs;
+
+        document.getElementById('save').onclick = async () => {
+          await chrome.storage.sync.set({
+            subfolder: els.subfolder.value || 'Bunkr',
+            preferOgName: !!els.preferOgName.checked,
+            autoCloseSecs: Math.max(0, Number(els.autoCloseSecs.value || 0)),
+            openTabsPacingMs: Math.max(0, Number(els.openTabsPacingMs.value || 0))
+          });
+          alert('Saved.');
+        };
+      })();
+    </script>
+  </body>
+</html>
